@@ -1,0 +1,12 @@
+{
+  name: netease-cloud-music-api,
+  version: 1.0.0,
+  description: 自建网易云音乐API服务,
+  main: start.js,
+  scripts: {
+    start: node start.js
+  },
+  dependencies: {
+    NeteaseCloudMusicApi: ^4.30.0
+  }
+}

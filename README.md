@@ -45,9 +45,9 @@
 - pm2 托管，自动重启，开机自启
 <details><summary>彩蛋🤔</summary>
 
-<details><summary>- You can still survive after restarting, unlike your will to learn</summary>
+ <details><summary>- You can still survive after restarting, unlike your will to learn</summary>
 
-- 重启后依然能存活，不像你的学习意志
+ - 重启后依然能存活，不像你的学习意志
 
 </details>
 
@@ -164,9 +164,9 @@
 
 ## License 许可证
 
-<details><summary>MIT -- Do whatever you want, just do not blame me.</summary>
+ <details><summary>MIT -- Do whatever you want, just do not blame me.</summary>
 
-麻省理工 -- 爱干什么就干什么吧,别来怪我。
+ 麻省理工 -- 爱干什么就干什么吧,别来怪我。
 
 </details>
 
@@ -176,13 +176,13 @@
 
 <details><summary>If this repo saved your bot, consider giving it a star.</summary>
 
-如果这个仓库拯救了你的机器人,请考虑给它点个星。
+ 如果这个仓库拯救了你的机器人,请考虑给它点个星。
 
 </details>
 
 <details><summary>Made with love and frustration from expired third-party APIs.</summary>
 
-怀着爱与无奈,用过期的第三方API制作而成。
+ 怀着爱与无奈,用过期的第三方API制作而成。
 
 </details>
 

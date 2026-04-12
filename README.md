@@ -21,31 +21,37 @@
 
 ---
 
-## 为什么会有这个项目
+## 为何会有这个项目📖
 
-让我给你描述一个场景：
+让我来给您描绘一下吧：
 
 - 现在是凌晨 3 点
 - 你的机器人不能播放音乐
 - 你凝视虚空，虚空也凝视着你
-- 你依赖的第三方 API 挂了，而你对此无能为力
+- 果然你依赖的第三方 API 挂了，而你对此无能为力
 
 这个仓库正是那场存在午夜危机的结果。基于 NeteaseCloudMusicApi 的自建部署方案，在本地里你能控制、维护并信任它（希望如此）。
 
-## 特性
+## 免责声明 ❗
+
+- 本项目的功能仅限于内部交流与小范围使用，请勿将 本项目 用于任何以盈利为目的的场景。
+- 仅供交流学习使用。如有侵权，请联系我们，我们会立即删除相关内容。
+
+## 特性✨
 
 - 完全不依赖第三方 API 服务器
 - 支持全部 NeteaseCloudMusicApi 接口
 - 本地运行于 127.0.0.1:3000，安全且快速
 - pm2 托管，自动重启，开机自启
-- You can still survive after restarting, unlike your will to learn
-<details><summary>Click to expand</summary>
+<details><summary>彩蛋🤔</summary>
+
+<details><summary>- You can still survive after restarting, unlike your will to learn</summary>
 
 - 重启后依然能存活，不像你的学习意志
 
 </details>
 
-## 安装教程
+## 安装教程😊
 
 1. 推荐使用 git 进行安装，以方便后续升级
 
@@ -153,22 +159,26 @@
 
 ## Acknowledgements 致谢
 
-- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) ——————让这一切成为可能的起源项目
+- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) ——让这一切成为可能的起源项目
 - [pm2](https://pm2.keymetrics.io/) -- 让服务永远活下去
 
 ## License 许可证
 
-MIT -- Do whatever you want, just do not blame me.
+<details><summary>MIT -- Do whatever you want, just do not blame me.</summary>
+
 麻省理工 -- 爱干什么就干什么吧,别来怪我。
+
 
 ---
 
 <div align=center>
 
-If this repo saved your bot, consider giving it a star.
+<details><summary>If this repo saved your bot, consider giving it a star.</summary>
+
 如果这个仓库拯救了你的机器人,请考虑给它点个星。
 
-Made with love and frustration from expired third-party APIs.
+<details><summary>Made with love and frustration from expired third-party APIs.</summary>
+
 怀着爱与无奈,用过期的第三方API制作而成。
 
 </div>

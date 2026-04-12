@@ -39,7 +39,11 @@
 - 本地运行于 127.0.0.1:3000，安全且快速
 - pm2 托管，自动重启，开机自启
 - You can still survive after restarting, unlike your will to learn
+<details><summary>Click to expand</summary>
+
 - 重启后依然能存活，不像你的学习意志
+
+</details>
 
 ## 安装教程
 

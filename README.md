@@ -1,150 +1,163 @@
+> [!TIP]
+> 如果这个项目帮助到了你，请给我们一个星星（Starred）！谢谢！
+
+> [!WARNING]
+> 本项目仅供学习交流使用，请勿用于商业及非法用途，如有侵权请联系删除
+
 <div align=center>
 
 # NeteaseCloudMusicApi
 
-**Self-Hosted Edition**
+**网易云音乐 Node.js API 自建部署服务**
 
-[![Node.js](https://img.shields.io/badge/Node.js-%3E%3D18-green?logo=node.js&logoColor=white)](https://nodejs.org/)
-[![License: MIT](https://img.shields.io/badge/License-MIT-yellow.svg)](https://opensource.org/licenses/MIT)
+<br>
 
-*A third-party music API died for this repo to exist.*
-
-[Getting Started](#getting-started) · [Usage](#usage) · [Deploy](#deploy-with-pm2)
+![Nodejs](https://img.shields.io/badge/-Node.js-3C873A?style=flat&logo=Node.js&logoColor=white)
+![JavaScript](https://img.shields.io/badge/-JavaScript-eed718?style=flat&logo=javascript&logoColor=ffffff)
+[![license](https://img.shields.io/github/license/sarsxe/NeteaseCloudMusicApi.svg?style=flat)](https://github.com/sarsxe/NeteaseCloudMusicApi/blob/main/LICENSE)
+![version](https://img.shields.io/badge/version-1.0.0-blue)
 
 </div>
 
 ---
 
-## Why This Exists
+## 为什么会有这个项目
 
-Let me paint you a picture:
+让我给你描述一个场景：
 
-- It is 3 AM
-- Your bot cannot play music
-- The third-party API you relied on has returned a DNS error
-- You stare into the void, and the void stares back
+- 凌晨三点，你的 Bot 突然不能播放音乐了
+- 控制台报出一串 DNS 错误
+- 你盯着屏幕发呆，屏幕也盯着你发呆
+- 原来是第三方 API 挂了，而你对此无能为力
 
-This repo is the result of that existential crisis.
-A self-hosted [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) that you control, you maintain, and you trust (hopefully).
+这个仓库就是这次午夜危机的产物。基于 NeteaseCloudMusicApi 的自建部署方案，你掌控服务，你维护服务。
 
-## Features
+## 特性
 
-- Zero reliance on third-party API servers
-- All NeteaseCloudMusicApi endpoints supported
-- Runs locally on 127.0.0.1:3000 -- secure and fast
-- pm2 managed with auto-restart
-- Survives reboots, unlike your motivation
+- 零依赖第三方 API 服务器
+- 支持全部 NeteaseCloudMusicApi 接口
+- 本地运行于 127.0.0.1:3000，安全且快速
+- pm2 托管，自动重启，开机自启
+- 重启后依然存活，不像你的学习动力
 
-## Getting Started
+## 安装教程
 
-### Prerequisites
+1. 推荐使用 git 进行安装，以方便后续升级
 
-- [Node.js](https://nodejs.org/) >= 18
-- npm
+使用 GitHub:
 
-### Install
-
-Clone the repo and install dependencies:
-
-    git clone https://github.com/sarsxe/NeteaseCloudMusicApi.git
+    git clone --depth=1 https://github.com/sarsxe/NeteaseCloudMusicApi.git
     cd NeteaseCloudMusicApi
+
+2. 安装依赖
+
     npm install
 
-### Run
+3. 启动服务
 
     node start.js
 
-The API is now live at http://127.0.0.1:3000
+服务默认运行在 http://127.0.0.1:3000
 
-Quick health check:
+快速验证:
 
     curl http://127.0.0.1:3000/search?keywords=hello
 
-## Usage
+## 功能介绍
 
-This service supports all endpoints from NeteaseCloudMusicApi.
+<details>
+<summary>支持的 API 接口（点击展开）</summary>
 
-| Endpoint | Description |
-|----------|-------------|
-| /search?keywords=xxx | Search songs by keyword |
-| /song/url/v1?id=xxx&level=standard | Get song playback URL |
-| /song/detail?ids=xxx | Get song details |
-| /song/wiki/summary?id=xxx | Get song wiki summary |
-| /login/status | Check login status |
-| /cloudsearch?keywords=xxx | Advanced search |
+| 接口 | 说明 |
+| ---- | ---- |
+| /search?keywords=xxx | 搜索歌曲 |
+| /cloudsearch?keywords=xxx | 高级搜索 |
+| /song/url/v1?id=xxx | 获取歌曲播放链接 |
+| /song/detail?ids=xxx | 获取歌曲详情 |
+| /lyric?id=xxx | 获取歌词 |
+| /playlist/detail?id=xxx | 获取歌单详情 |
+| /artist/songs?id=xxx | 获取歌手歌曲 |
+| /album?id=xxx | 获取专辑内容 |
+| /comment/music?id=xxx | 获取歌曲评论 |
+| /banner | 首页轮播图 |
+| /personalized | 推荐歌单 |
+| /toplist | 排行榜 |
+| /login/status | 检查登录状态 |
+| /user/cloud | 云盘歌曲列表 |
 
-### Audio Quality Levels
+完整接口文档请参考：[NeteaseCloudMusicApi 文档](https://binaryify.github.io/NeteaseCloudMusicApi)
 
-| Level | Description |
-|-------|-------------|
-| standard | Standard quality |
-| higher | Higher quality |
-| exhigh | Extremely high quality |
-| lossless | Lossless (FLAC) |
-| hires | Hi-Res audio |
+</details>
 
-### Configuration
+### 音质等级
 
-Edit **start.js** to customize:
+| 等级 | 说明 |
+| ---- | ---- |
+| standard | 标准音质 |
+| higher | 较高音质 |
+| exhigh | 极高音质 |
+| lossless | 无损音质（FLAC） |
+| hires | Hi-Res 高解析度 |
 
-- **port** -- API port (default: 3000)
-- **host** -- Bind address (default: 127.0.0.1)
+## 部署方式
 
-To use with Yunzai-Bot rconsole-plugin, update your **tools.yaml**:
-
-    useLocalNeteaseAPI: true
-    neteaseCloudAPIServer: http://127.0.0.1:3000
-
-## Deploy with pm2
-
-For production use with auto-restart and boot persistence:
+### 使用 pm2 托管（推荐）
 
     pm2 start start.js --name NeteaseCloudMusicApi
     pm2 save
     pm2 startup
 
-Useful commands:
+常用命令:
 
-    pm2 logs NeteaseCloudMusicApi    # View logs
-    pm2 restart NeteaseCloudMusicApi # Restart service
-    pm2 stop NeteaseCloudMusicApi    # Stop service
-    pm2 monit                        # Real-time monitor
+| 命令 | 说明 |
+| ---- | ---- |
+| pm2 logs NeteaseCloudMusicApi | 查看日志 |
+| pm2 restart NeteaseCloudMusicApi | 重启服务 |
+| pm2 stop NeteaseCloudMusicApi | 停止服务 |
+| pm2 monit | 实时监控 |
 
-## Project Structure
+### 配置 Yunzai-Bot rconsole-plugin 对接
+
+编辑 tools.yaml 配置文件:
+
+    useLocalNeteaseAPI: true
+    neteaseCloudAPIServer: http://127.0.0.1:3000
+
+## 项目结构
 
     NeteaseCloudMusicApi/
-    |-- start.js            # Entry point
-    |-- package.json        # Dependencies
-    |-- package-lock.json   # Lock file
-    |-- .gitignore          # Git ignore rules
-    |-- README.md           # You are here
-    |-- node_modules/       # Dependencies (generated)
+    |-- start.js            # 启动入口
+    |-- package.json        # 项目配置及依赖
+    |-- package-lock.json   # 依赖锁定文件
+    |-- .gitignore          # Git 忽略规则
+    |-- README.md           # 项目文档
+    |-- node_modules/       # 依赖包（自动生成）
 
-## Tech Stack
+## 技术栈
 
-| Tech | Purpose |
-|------|---------|
-| Node.js | Runtime |
-| Express | Web framework |
-| NeteaseCloudMusicApi v4.30.0 | Core API module |
-| pm2 | Process management |
-| Your sanity | Troubleshooting at 3 AM |
+| 技术 | 用途 |
+| ---- | ---- |
+| Node.js | 运行环境 |
+| Express | Web 框架 |
+| NeteaseCloudMusicApi v4.30.0 | 核心 API 模块 |
+| pm2 | 进程管理 |
+| 你的理智 | 凌晨三点排障 |
 
-## Acknowledgements
+## 致谢
 
-- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) -- The OG project that made this possible
-- [pm2](https://pm2.keymetrics.io/) -- For keeping things alive
+- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) -- 神级项目，没有它就没有这一切
+- [pm2](https://pm2.keymetrics.io/) -- 让服务永远活下去
 
-## License
+## 许可证
 
-[MIT](LICENSE) -- Do whatever you want, just do not blame me.
+[MIT](LICENSE) -- 随便用，但出问题别找我
 
 ---
 
 <div align=center>
 
-*If this repo saved your bot, consider giving it a star.*
+如果这个项目拯救了你的 Bot，请给个 Star
 
-*Made with love and frustration from expired third-party APIs.*
+用爱和凌晨三点的崩溃写成
 
 </div>

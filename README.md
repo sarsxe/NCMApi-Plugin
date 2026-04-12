@@ -45,7 +45,7 @@
 - pm2 托管，自动重启，开机自启
 <details><summary>彩蛋🤔</summary>
 
-<details><summary>- You can still survive after restarting, unlike your will to learn</summary></details>
+<details><summary>- You can still survive after restarting, unlike your will to learn</details></summary>
 
 - 重启后依然能存活，不像你的学习意志
 

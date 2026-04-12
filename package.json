@@ -1,11 +1,24 @@
 {
   name: netease-cloud-music-api,
   version: 1.0.0,
-  description: 自建网易云音乐API服务,
+  description: 网易云音乐 NodeJS 版 API 自建服务,
   main: start.js,
   scripts: {
     start: node start.js
   },
+  repository: {
+    type: git,
+    url: https://github.com/sarsxe/NeteaseCloudMusicApi.git
+  },
+  keywords: [
+    网易云音乐,
+    网易云,
+    音乐,
+    NeteaseCloudMusicApi,
+    Yunzai-Bot
+  ],
+  author: sarsxe,
+  license: MIT,
   dependencies: {
     NeteaseCloudMusicApi: ^4.30.0
   }

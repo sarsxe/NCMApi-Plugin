@@ -25,20 +25,21 @@
 
 让我给你描述一个场景：
 
-- 凌晨三点，你的 Bot 突然不能播放音乐了
-- 控制台报出一串 DNS 错误
-- 你盯着屏幕发呆，屏幕也盯着你发呆
-- 原来是第三方 API 挂了，而你对此无能为力
+- 现在是凌晨 3 点
+- 你的机器人不能播放音乐
+- 你凝视虚空，虚空也凝视着你
+- 你依赖的第三方 API 挂了，而你对此无能为力
 
-这个仓库就是这次午夜危机的产物。基于 NeteaseCloudMusicApi 的自建部署方案，你掌控服务，你维护服务。
+这个仓库正是那场存在午夜危机的结果。基于 NeteaseCloudMusicApi 的自建部署方案，在本地里你能控制、维护并信任它（希望如此）。
 
 ## 特性
 
-- 零依赖第三方 API 服务器
+- 完全不依赖第三方 API 服务器
 - 支持全部 NeteaseCloudMusicApi 接口
 - 本地运行于 127.0.0.1:3000，安全且快速
 - pm2 托管，自动重启，开机自启
-- 重启后依然存活，不像你的学习动力
+- You can still survive after restarting, unlike your will to learn
+- 重启后依然能存活，不像你的学习意志
 
 ## 安装教程
 
@@ -47,13 +48,16 @@
 使用 GitHub:
 
     git clone --depth=1 https://github.com/sarsxe/NeteaseCloudMusicApi.git
-    cd NeteaseCloudMusicApi
 
-2. 安装依赖
+2. 进入项目
+
+    cd /root/NeteaseCloudMusicApi
+
+3. 安装依赖
 
     npm install
 
-3. 启动服务
+4. 启动服务
 
     node start.js
 
@@ -133,7 +137,7 @@
     |-- README.md           # 项目文档
     |-- node_modules/       # 依赖包（自动生成）
 
-## 技术栈
+## Tech Stack 技术栈
 
 | 技术 | 用途 |
 | ---- | ---- |
@@ -141,23 +145,26 @@
 | Express | Web 框架 |
 | NeteaseCloudMusicApi v4.30.0 | 核心 API 模块 |
 | pm2 | 进程管理 |
-| 你的理智 | 凌晨三点排障 |
+| Your sanity | Troubleshooting at 3 AM |
 
-## 致谢
+## Acknowledgements 致谢
 
-- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) -- 神级项目，没有它就没有这一切
+- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) ——————让这一切成为可能的起源项目
 - [pm2](https://pm2.keymetrics.io/) -- 让服务永远活下去
 
-## 许可证
+## License 许可证
 
-[MIT](LICENSE) -- 随便用，但出问题别找我
+MIT -- Do whatever you want, just do not blame me.
+麻省理工 -- 爱干什么就干什么吧,别来怪我。
 
 ---
 
 <div align=center>
 
-如果这个项目拯救了你的 Bot，请给个 Star
+If this repo saved your bot, consider giving it a star.
+如果这个仓库拯救了你的机器人,请考虑给它点个星。
 
-用爱和凌晨三点的崩溃写成
+Made with love and frustration from expired third-party APIs.
+怀着爱与无奈,用过期的第三方API制作而成。
 
 </div>

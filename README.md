@@ -43,9 +43,7 @@
 - 支持全部 NeteaseCloudMusicApi 接口
 - 本地运行于 127.0.0.1:3000，安全且快速
 - pm2 托管，自动重启，开机自启
-<details><summary>彩蛋🤔</summary>
-
-<details><summary>- You can still survive after restarting, unlike your will to learn</details></summary>
+<details><summary>- You can still survive after restarting, unlike your will to learn</summary>
 
 - 重启后依然能存活，不像你的学习意志
 

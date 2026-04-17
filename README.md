@@ -55,19 +55,33 @@
 
 使用 GitHub:
 
-    git clone --depth=1 https://github.com/sarsxe/NCMcApi.git ./plugins/NCMApi-Plugin
+```sh
+git clone --depth=1 https://github.com/sarsxe/NCMcApi.git ./plugins/NCMApi-Plugin
+```
 
-2. 进入项目
+2. 进入云崽目录
 
-    cd /root/Yunzai/plugins/NCMApi-Plugin
+```sh
+cd /root/(崽崽名称)
+```
 
-3. 安装依赖
+3. 进入项目
 
-    npm install
+```sh
+cd /root/(崽崽名称)/plugins/NCMApi-plugin
+```
 
-4. 启动服务
+4. 安装依赖
 
-    node start.js
+```sh
+npm install
+```
+
+5. 启动服务
+
+```sh
+node start.js
+```
 
 服务默认运行在 http://127.0.0.1:3000
 

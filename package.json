@@ -1,25 +1,25 @@
 {
-  name: netease-cloud-music-api,
-  version: 1.0.0,
-  description: 网易云音乐 NodeJS 版 API 自建服务,
-  main: start.js,
-  scripts: {
-    start: node start.js
+  "name": "ncmapi-plugin",
+  "version": "1.0.0",
+  "description": "Self-hosted NeteaseCloudMusicApi service and Yunzai plugin updater",
+  "type": "module",
+  "main": "index.js",
+  "scripts": {
+    "start": "node start.js"
   },
-  repository: {
-    type: git,
-    url: https://github.com/sarsxe/NeteaseCloudMusicApi.git
+  "repository": {
+    "type": "git",
+    "url": "https://github.com/sarsxe/NeteaseCloudMusicApi.git"
   },
-  keywords: [
-    网易云音乐,
-    网易云,
-    音乐,
-    NeteaseCloudMusicApi,
-    Yunzai-Bot
+  "keywords": [
+    "netease",
+    "music",
+    "api",
+    "Yunzai-Bot"
   ],
-  author: sarsxe,
-  license: MIT,
-  dependencies: {
-    NeteaseCloudMusicApi: ^4.30.0
+  "author": "sarsxe",
+  "license": "MIT",
+  "dependencies": {
+    "NeteaseCloudMusicApi": "^4.30.0"
   }
 }

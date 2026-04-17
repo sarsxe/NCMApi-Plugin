@@ -1,0 +1,136 @@
+import fs from 'node:fs'
+import path from 'node:path'
+import { exec, execSync } from 'node:child_process'
+
+const pluginDir = 'NCMApi-Plugin'
+const apiProcessName = 'NeteaseCloudMusicApi'
+
+function runCmd(cmd) {
+  return new Promise(resolve => {
+    exec(cmd, { windowsHide: true }, (error, stdout, stderr) => {
+      resolve({ error, stdout, stderr })
+    })
+  })
+}
+
+export class update extends plugin {
+  constructor() {
+    super({
+      name: 'NCMApi插件更新',
+      dsc: 'NCMApi-Plugin 更新与版本管理',
+      event: 'message',
+      priority: 4000,
+      rule: [
+        { reg: '^#*(NCM|ncm)(插件)?版本$', fnc: 'version' },
+        { reg: '^#*(NCM|ncm)(插件)?(强制更新|更新)$', fnc: 'ncmUpdate' }
+      ]
+    })
+    this.oldCommitId = ''
+  }
+
+  async version() {
+    const packageJsonPath = path.join('./plugins', pluginDir, 'package.json')
+    const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
+    const msg = [
+      'NCMApi-Plugin 版本信息',
+      '版本号：' + (packageJson.version || 'unknown'),
+      'Commit：' + this.getCommitId(),
+      '时间：' + this.getTime(),
+      '目录：./plugins/' + pluginDir
+    ].join('\n')
+    await this.reply(msg)
+    return true
+  }
+
+  async ncmUpdate() {
+    if (!this.e.isMaster) {
+      await this.reply('您无权操作')
+      return true
+    }
+
+    const basePath = './plugins/' + pluginDir
+    const isForce = this.e.msg.includes('强制')
+    let pullCmd = 'git -C ' + basePath + ' pull --no-rebase'
+    if (isForce) pullCmd = 'git -C ' + basePath + ' checkout . && ' + pullCmd
+
+    this.oldCommitId = this.getCommitId()
+    await this.reply('正在执行 NCMApi-Plugin 更新，请稍等')
+
+    const pullRet = await runCmd(pullCmd)
+    if (pullRet.error) {
+      await this.gitErr(pullRet.error, pullRet.stdout)
+      return false
+    }
+
+    const npmRet = await runCmd('cd ' + basePath + ' && npm install')
+    if (npmRet.error) {
+      await this.reply('代码已更新，但 npm install 执行失败，请手动检查依赖')
+      await this.reply((npmRet.stderr || npmRet.stdout || String(npmRet.error)).slice(0, 1000))
+      return false
+    }
+
+    const restartRet = await runCmd('pm2 restart ' + apiProcessName + ' --update-env && pm2 save')
+    if (restartRet.error) {
+      await this.reply('代码已更新，但重启 NeteaseCloudMusicApi 失败，请手动检查 pm2')
+      await this.reply((restartRet.stderr || restartRet.stdout || String(restartRet.error)).slice(0, 1000))
+      return false
+    }
+
+    const time = this.getTime()
+    if (/Already up|已经是最新/g.test(pullRet.stdout)) {
+      await this.reply('NCMApi-Plugin 已经是最新版本，最后更新时间：' + time)
+      return true
+    }
+
+    await this.reply('NCMApi-Plugin 更新成功，最后更新时间：' + time)
+    const log = this.getLog()
+    if (log) await this.reply(log)
+    return true
+  }
+
+  getCommitId() {
+    try {
+      return execSync('git -C ./plugins/' + pluginDir + ' rev-parse --short HEAD', { encoding: 'utf-8' }).trim()
+    } catch {
+      return 'unknown'
+    }
+  }
+
+  getTime() {
+    try {
+      return execSync('git -C ./plugins/' + pluginDir + ' log -1 --pretty=format:%cd --date=format:%m-%d_%H:%M', { encoding: 'utf-8' }).trim()
+    } catch {
+      return '获取时间失败'
+    }
+  }
+
+  getLog() {
+    try {
+      const out = execSync('git -C ./plugins/' + pluginDir + ' log -20 --pretty=format:%h__%cd__%s --date=format:%m-%d_%H:%M', { encoding: 'utf-8' })
+      const lines = out.split('\n')
+      const logs = []
+      for (const line of lines) {
+        const parts = line.split('__')
+        if (parts[0] === this.oldCommitId) break
+        if ((parts[2] || '').includes('Merge branch')) continue
+        if (parts[1] && parts[2]) logs.push('[' + parts[1] + '] ' + parts[2])
+      }
+      return logs.join('\n')
+    } catch {
+      return ''
+    }
+  }
+
+  async gitErr(err, stdout) {
+    const errMsg = err ? String(err) : ''
+    const out = stdout ? String(stdout) : ''
+    let msg = 'NCMApi-Plugin 更新失败'
+    if (errMsg.includes('Timed out')) msg += '\n连接超时'
+    else if (/Failed to connect|unable to access/g.test(errMsg)) msg += '\n连接失败'
+    else if (errMsg.includes('be overwritten by merge') || out.includes('CONFLICT')) {
+      msg += '\n存在冲突，请解决后再更新，或执行 #NCM强制更新 放弃本地修改'
+    }
+    const detail = (errMsg + '\n' + out).trim().slice(0, 1200)
+    await this.reply(msg + (detail ? '\n' + detail : ''))
+  }
+}

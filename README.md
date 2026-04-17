@@ -55,11 +55,11 @@
 
 使用 GitHub:
 
-    git clone --depth=1 https://github.com/sarsxe/NeteaseCloudMusicApi.git
+    git clone --depth=1 https://github.com/sarsxe/NCMcApi.git ./plugins/NCMApi-Plugin
 
 2. 进入项目
 
-    cd /root/NeteaseCloudMusicApi
+    cd /root/Yunzai/plugins/NCMApi-Plugin
 
 3. 安装依赖
 

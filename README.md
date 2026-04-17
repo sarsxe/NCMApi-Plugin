@@ -14,7 +14,7 @@
 
 ![Nodejs](https://img.shields.io/badge/-Node.js-3C873A?style=flat&logo=Node.js&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/-JavaScript-eed718?style=flat&logo=javascript&logoColor=ffffff)
-[![license](https://img.shields.io/github/license/sarsxe/NeteaseCloudMusicApi.svg?style=flat)](https://github.com/sarsxe/NeteaseCloudMusicApi/blob/main/LICENSE)
+[![license](https://img.shields.io/github/license/sarsxe/NCMApi-plugin.svg?style=flat)](https://github.com/sarsxe/NCMApi-plugin/blob/main/LICENSE)
 ![version](https://img.shields.io/badge/version-1.0.0-blue)
 
 </div>
@@ -56,7 +56,7 @@
 使用 GitHub:
 
 ```sh
-git clone --depth=1 https://github.com/sarsxe/NCMcApi.git ./plugins/NCMApi-Plugin
+git clone --depth=1 https://github.com/sarsxe/NCMcApi.git ./plugins/NCMApi-plugin
 ```
 
 2. 进入云崽目录

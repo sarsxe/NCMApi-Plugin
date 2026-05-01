@@ -1,14 +1,14 @@
-import { createRequire } from 'node:module'
+import { startNcmApiService } from './lib/service.js'
 
-const require = createRequire(import.meta.url)
-const { serveNcmApi } = require('NeteaseCloudMusicApi')
+try {
+  await startNcmApiService({ from: 'standalone' })
+} catch (err) {
+  const message = String((err && err.message) || err)
 
-serveNcmApi({
-  port: 3000,
-  host: '127.0.0.1'
-}).then(() => {
-  console.log('NeteaseCloudMusicApi started on 127.0.0.1:3000')
-}).catch(err => {
-  console.error('Failed to start:', err)
+  if (/Cannot find module|Cannot find package|ERR_MODULE_NOT_FOUND/.test(message)) {
+    console.error('[NCMApi-plugin] 缺少依赖 NeteaseCloudMusicApi，请先在当前插件目录执行 npm install')
+  }
+
+  console.error(err)
   process.exit(1)
-})
+}

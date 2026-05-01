@@ -1,13 +1,17 @@
 import fs from 'node:fs'
 import path from 'node:path'
 import { exec, execSync } from 'node:child_process'
+import { fileURLToPath } from 'node:url'
 
-const pluginDir = 'NCMApi-Plugin'
-const apiProcessName = 'NeteaseCloudMusicApi'
+const pluginDir = 'NCMApi-plugin'
+const pluginPath = fileURLToPath(new URL('../', import.meta.url))
 
-function runCmd(cmd) {
+function runCmd(command, options = {}) {
   return new Promise(resolve => {
-    exec(cmd, { windowsHide: true }, (error, stdout, stderr) => {
+    exec(command, {
+      cwd: options.cwd || pluginPath,
+      windowsHide: true
+    }, (error, stdout, stderr) => {
       resolve({ error, stdout, stderr })
     })
   })
@@ -17,7 +21,7 @@ export class update extends plugin {
   constructor() {
     super({
       name: 'NCMApi插件更新',
-      dsc: 'NCMApi-Plugin 更新与版本管理',
+      dsc: 'NCMApi-plugin 更新与版本管理',
       event: 'message',
       priority: 4000,
       rule: [
@@ -29,14 +33,15 @@ export class update extends plugin {
   }
 
   async version() {
-    const packageJsonPath = path.join('./plugins', pluginDir, 'package.json')
+    const packageJsonPath = path.join(pluginPath, 'package.json')
     const packageJson = JSON.parse(fs.readFileSync(packageJsonPath, 'utf8'))
     const msg = [
-      'NCMApi-Plugin 版本信息',
+      'NCMApi-plugin 版本信息',
       '版本号：' + (packageJson.version || 'unknown'),
       'Commit：' + this.getCommitId(),
       '时间：' + this.getTime(),
-      '目录：./plugins/' + pluginDir
+      '目录：./plugins/' + pluginDir,
+      '启动方式：随 Yunzai 自动启动'
     ].join('\n')
     await this.reply(msg)
     return true
@@ -48,41 +53,43 @@ export class update extends plugin {
       return true
     }
 
-    const basePath = './plugins/' + pluginDir
     const isForce = this.e.msg.includes('强制')
-    let pullCmd = 'git -C ' + basePath + ' pull --no-rebase'
-    if (isForce) pullCmd = 'git -C ' + basePath + ' checkout . && ' + pullCmd
-
     this.oldCommitId = this.getCommitId()
-    await this.reply('正在执行 NCMApi-Plugin 更新，请稍等')
+    await this.reply('正在执行 NCMApi-plugin 更新，请稍等')
 
-    const pullRet = await runCmd(pullCmd)
+    if (isForce) {
+      const resetRet = await runCmd('git checkout .')
+      if (resetRet.error) {
+        await this.gitErr(resetRet.error, resetRet.stdout, resetRet.stderr)
+        return false
+      }
+    }
+
+    const pullRet = await runCmd('git pull --no-rebase')
     if (pullRet.error) {
-      await this.gitErr(pullRet.error, pullRet.stdout)
+      await this.gitErr(pullRet.error, pullRet.stdout, pullRet.stderr)
       return false
     }
 
-    const npmRet = await runCmd('cd ' + basePath + ' && npm install')
+    const npmRet = await runCmd('npm install')
     if (npmRet.error) {
       await this.reply('代码已更新，但 npm install 执行失败，请手动检查依赖')
       await this.reply((npmRet.stderr || npmRet.stdout || String(npmRet.error)).slice(0, 1000))
       return false
     }
 
-    const restartRet = await runCmd('pm2 restart ' + apiProcessName + ' --update-env && pm2 save')
-    if (restartRet.error) {
-      await this.reply('代码已更新，但重启 NeteaseCloudMusicApi 失败，请手动检查 pm2')
-      await this.reply((restartRet.stderr || restartRet.stdout || String(restartRet.error)).slice(0, 1000))
-      return false
-    }
-
     const time = this.getTime()
-    if (/Already up|已经是最新/g.test(pullRet.stdout)) {
-      await this.reply('NCMApi-Plugin 已经是最新版本，最后更新时间：' + time)
+    const pullOutput = String(pullRet.stdout || '') + '\n' + String(pullRet.stderr || '')
+    if (/Already up[ -]to[ -]date|已经是最新/i.test(pullOutput)) {
+      await this.reply('NCMApi-plugin 已经是最新版本，最后更新时间：' + time)
       return true
     }
 
-    await this.reply('NCMApi-Plugin 更新成功，最后更新时间：' + time)
+    await this.reply([
+      'NCMApi-plugin 更新成功',
+      '最后更新时间：' + time,
+      '依赖已安装，请重启 Yunzai 使更新与内置 NCM API 服务生效'
+    ].join('\n'))
     const log = this.getLog()
     if (log) await this.reply(log)
     return true
@@ -90,7 +97,10 @@ export class update extends plugin {
 
   getCommitId() {
     try {
-      return execSync('git -C ./plugins/' + pluginDir + ' rev-parse --short HEAD', { encoding: 'utf-8' }).trim()
+      return execSync('git rev-parse --short HEAD', {
+        cwd: pluginPath,
+        encoding: 'utf-8'
+      }).trim()
     } catch {
       return 'unknown'
     }
@@ -98,7 +108,10 @@ export class update extends plugin {
 
   getTime() {
     try {
-      return execSync('git -C ./plugins/' + pluginDir + ' log -1 --pretty=format:%cd --date=format:%m-%d_%H:%M', { encoding: 'utf-8' }).trim()
+      return execSync('git log -1 --pretty=format:%cd --date=format:%m-%d_%H:%M', {
+        cwd: pluginPath,
+        encoding: 'utf-8'
+      }).trim()
     } catch {
       return '获取时间失败'
     }
@@ -106,7 +119,10 @@ export class update extends plugin {
 
   getLog() {
     try {
-      const out = execSync('git -C ./plugins/' + pluginDir + ' log -20 --pretty=format:%h__%cd__%s --date=format:%m-%d_%H:%M', { encoding: 'utf-8' })
+      const out = execSync('git log -20 --pretty=format:%h__%cd__%s --date=format:%m-%d_%H:%M', {
+        cwd: pluginPath,
+        encoding: 'utf-8'
+      })
       const lines = out.split('\n')
       const logs = []
       for (const line of lines) {
@@ -121,16 +137,17 @@ export class update extends plugin {
     }
   }
 
-  async gitErr(err, stdout) {
+  async gitErr(err, stdout, stderr) {
     const errMsg = err ? String(err) : ''
     const out = stdout ? String(stdout) : ''
-    let msg = 'NCMApi-Plugin 更新失败'
+    const errOut = stderr ? String(stderr) : ''
+    let msg = 'NCMApi-plugin 更新失败'
     if (errMsg.includes('Timed out')) msg += '\n连接超时'
-    else if (/Failed to connect|unable to access/g.test(errMsg)) msg += '\n连接失败'
-    else if (errMsg.includes('be overwritten by merge') || out.includes('CONFLICT')) {
+    else if (/Failed to connect|unable to access/i.test(errMsg)) msg += '\n连接失败'
+    else if (errMsg.includes('be overwritten by merge') || out.includes('CONFLICT') || errOut.includes('CONFLICT')) {
       msg += '\n存在冲突，请解决后再更新，或执行 #NCM强制更新 放弃本地修改'
     }
-    const detail = (errMsg + '\n' + out).trim().slice(0, 1200)
+    const detail = (errMsg + '\n' + out + '\n' + errOut).trim().slice(0, 1200)
     await this.reply(msg + (detail ? '\n' + detail : ''))
   }
 }

@@ -53,10 +53,14 @@
 
 1. 推荐使用 git 进行安装，以方便后续升级
 
+```sh
+cd /root/Yunzai
+```
+
 使用 GitHub:
 
 ```sh
-git clone --depth=1 https://github.com/sarsxe/NCMcApi.git ./plugins/NCMApi-plugin
+git clone --depth=1 https://github.com/sarsxe/NCMApi-plugin.git ./plugins/NCMApi-plugin
 ```
 
 2. 进入项目

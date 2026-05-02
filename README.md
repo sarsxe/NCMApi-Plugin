@@ -1,16 +1,14 @@
 > [!TIP]
-> 如果这个项目帮助到了你，请给我们一个星星（Starred）！谢谢！
+> 如果这个项目帮助到了你，请给我们一个 Star！
 
 > [!WARNING]
-> 本项目仅供学习交流使用，请勿用于商业及非法用途，如有侵权请联系删除
+> 本项目仅供学习交流使用，请勿用于商业及非法用途，如有侵权请联系删除。
 
 <div align=center>
 
-# NeteaseCloudMusicApi
+# NCMApi-plugin
 
-**网易云音乐 Node.js API 自建部署服务**
-
-<br>
+网易云音乐 Node.js API 自建部署服务 / Yunzai-Bot 插件
 
 ![Nodejs](https://img.shields.io/badge/-Node.js-3C873A?style=flat&logo=Node.js&logoColor=white)
 ![JavaScript](https://img.shields.io/badge/-JavaScript-eed718?style=flat&logo=javascript&logoColor=ffffff)
@@ -21,78 +19,79 @@
 
 ---
 
-## 为何会有这个项目📖
+## 简介
 
-让我来给您描绘一下吧：
+当第三方网易云 API 不稳定时，机器人点歌、搜歌、取链接等功能也会一起受影响。
+本插件基于 NeteaseCloudMusicApi 提供本地自建服务，并以 Yunzai 插件方式接入，减少额外维护成本。
 
-- 现在是凌晨 3 点
-- 你的机器人不能播放音乐
-- 你凝视虚空，虚空也凝视着你
-- 果然你依赖的第三方 API 挂了，而你对此无能为力
+## 当前版本优化点
 
-这个仓库正是那场存在午夜危机的结果。基于 NeteaseCloudMusicApi 的自建部署方案，在本地里你能控制、维护并信任它（希望如此）。
+- 随 Yunzai 启动自动加载本地 NCM API
+- 无需再单独维护 pm2 start start.js
+- 内置单例启动保护，避免重复拉起
+- 若 127.0.0.1:3000 已有可用服务，会自动复用
+- 保留 node start.js 独立启动方式，方便调试
+- 插件更新后改为提示“重启 Yunzai 生效”
 
-## 免责声明 ❗
+## 安装教程
 
-- 本项目的功能仅限于内部交流与小范围使用，请勿将 本项目 用于任何以盈利为目的的场景。
-- 仅供交流学习使用。如有侵权，请联系我们，我们会立即删除相关内容。
+1. 克隆插件
 
-## 特性✨
+    git clone --depth=1 https://github.com/sarsxe/NCMApi-plugin.git ./plugins/NCMApi-plugin
 
-- 完全不依赖第三方 API 服务器
-- 支持全部 NeteaseCloudMusicApi 接口
-- 本地运行于 127.0.0.1:3000，安全且快速
-- pm2 托管，自动重启，开机自启
-<details><summary> You can still survive after restarting,unlike your will to learn. </summary>
+2. 进入插件目录并安装依赖
 
-- 重启后依然能存活，不像你的学习意志
+    cd /root/Yunzai/plugins/NCMApi-plugin
+    npm install
 
-</details>
+3. 重启或启动 Yunzai
 
-## 安装教程😊
+插件会在 Yunzai 加载时自动启动本地 NeteaseCloudMusicApi 服务。
 
-1. 推荐使用 git 进行安装，以方便后续升级
-
-使用 GitHub:
-
-```sh
-git clone --depth=1 https://github.com/sarsxe/NCMcApi.git ./plugins/NCMApi-plugin
-```
-
-2. 进入云崽目录
-
-```sh
-cd /root/(崽崽名称)
-```
-
-3. 进入项目
-
-```sh
-cd /root/(崽崽名称)/plugins/NCMApi-plugin
-```
-
-4. 安装依赖
-
-```sh
-npm install
-```
-
-5. 启动服务
-
-```sh
-node start.js
-```
-
-服务默认运行在 http://127.0.0.1:3000
-
-快速验证:
+4. 验证服务
 
     curl http://127.0.0.1:3000/search?keywords=hello
 
-## 功能介绍
+## 启动方式
 
-<details>
-<summary>支持的 API 接口（点击展开）</summary>
+### 方式一：随 Yunzai 自动启动（推荐）
+
+当前默认方式，无需再为本插件单独配置 pm2 进程。
+只要 Yunzai 正常启动，本插件就会在加载时自动尝试启动本地 API 服务。
+
+### 方式二：独立启动（兼容模式）
+
+如需单独调试，可执行：
+
+    cd /root/Yunzai/plugins/NCMApi-plugin
+    node start.js
+
+默认监听：127.0.0.1:3000
+
+## 更新与版本管理
+
+插件内支持以下命令：
+
+| 命令 | 说明 |
+| ---- | ---- |
+| #NCM版本 | 查看插件版本信息 |
+| #NCM更新 | 更新插件并安装依赖 |
+| #NCM强制更新 | 放弃本地修改后强制更新 |
+
+说明：
+
+- 更新命令会执行 git pull --no-rebase 和 npm install
+- 更新完成后，请重启 Yunzai，使插件代码与内置 NCM API 服务一起生效
+- 不再依赖单独的 pm2 restart NeteaseCloudMusicApi
+
+## 对接配置示例
+
+如需在其他插件或配置中显式指定本地网易云 API 地址，可使用：
+
+    useLocalNeteaseAPI: true
+    neteaseCloudAPIServer: http://127.0.0.1:3000
+
+## 常用接口示例
 
 | 接口 | 说明 |
 | ---- | ---- |
@@ -111,91 +110,32 @@ node start.js
 | /login/status | 检查登录状态 |
 | /user/cloud | 云盘歌曲列表 |
 
-完整接口文档请参考：[NeteaseCloudMusicApi 文档](https://binaryify.github.io/NeteaseCloudMusicApi)
-
-</details>
-
-### 音质等级
-
-| 等级 | 说明 |
-| ---- | ---- |
-| standard | 标准音质 |
-| higher | 较高音质 |
-| exhigh | 极高音质 |
-| lossless | 无损音质（FLAC） |
-| hires | Hi-Res 高解析度 |
-
-## 部署方式
-
-### 使用 pm2 托管（推荐）
-
-    pm2 start start.js --name NeteaseCloudMusicApi
-    pm2 save
-    pm2 startup
-
-常用命令:
-
-| 命令 | 说明 |
-| ---- | ---- |
-| pm2 logs NeteaseCloudMusicApi | 查看日志 |
-| pm2 restart NeteaseCloudMusicApi | 重启服务 |
-| pm2 stop NeteaseCloudMusicApi | 停止服务 |
-| pm2 monit | 实时监控 |
-
-### 配置 Yunzai-Bot rconsole-plugin 对接
-
-编辑 tools.yaml 配置文件:
-
-    useLocalNeteaseAPI: true
-    neteaseCloudAPIServer: http://127.0.0.1:3000
+完整接口文档：
+- https://binaryify.github.io/NeteaseCloudMusicApi
 
 ## 项目结构
 
-    NeteaseCloudMusicApi/
-    |-- start.js            # 启动入口
-    |-- package.json        # 项目配置及依赖
-    |-- package-lock.json   # 依赖锁定文件
-    |-- .gitignore          # Git 忽略规则
-    |-- README.md           # 项目文档
-    |-- node_modules/       # 依赖包（自动生成）
+    NCMApi-plugin/
+    |-- apps/
+    |-- service.js           # 本地 NCM API 启动封装与单例保护
+    |-- index.js             # Yunzai 插件入口，随 Yunzai 自动启动服务
+    |-- start.js             # 兼容独立启动入口
+    |-- package.json         # 项目配置及依赖
+    |-- package-lock.json    # 依赖锁定文件
+    |-- README.md            # 项目文档
 
-## Tech Stack 技术栈
+## 技术栈
 
-| 技术 | 用途 |
-| ---- | ---- |
-| Node.js | 运行环境 |
-| Express | Web 框架 |
-| NeteaseCloudMusicApi v4.30.0 | 核心 API 模块 |
-| pm2 | 进程管理 |
-| Your sanity | Troubleshooting at 3 AM |
+- Node.js
+- NeteaseCloudMusicApi
+- Yunzai-Bot Plugin
+- Git
 
-## Acknowledgements 致谢
+## 致谢
 
-- [NeteaseCloudMusicApi](https://github.com/Binaryify/NeteaseCloudMusicApi) ——让这一切成为可能的起源项目
-- [pm2](https://pm2.keymetrics.io/) -- 让服务永远活下去
+- https://github.com/Binaryify/NeteaseCloudMusicApi
+- https://github.com/Le-niao/Yunzai-Bot
 
-## License 许可证
+## License
 
-<details><summary>MIT -- Do whatever you want, just do not blame me.</summary>
-
-麻省理工 -- 爱干什么就干什么吧,别来怪我。
-
-</details>
-
----
-
-<div align=center>
-
-<details><summary>If this repo saved your bot, consider giving it a star.</summary>
-
-如果这个仓库拯救了你的机器人,请考虑给它点个星。
-
-</details>
-
-<details><summary>Made with love and frustration from expired third-party APIs.</summary>
-
-怀着爱与无奈,用过期的第三方API制作而成。
-
-</details>
-
-</div>
+MIT

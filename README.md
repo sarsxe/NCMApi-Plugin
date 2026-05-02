@@ -185,7 +185,6 @@ http://127.0.0.1:3000
 | Node.js | 运行环境 |
 | Express | Web 框架 |
 | NeteaseCloudMusicApi v4.30.0 | 核心 API 模块 |
-| pm2 | 进程管理 |
 | Your sanity | Troubleshooting at 3 AM |
 
 ## Acknowledgements 致谢

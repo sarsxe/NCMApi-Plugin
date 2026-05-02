@@ -73,7 +73,6 @@ export class runtime extends plugin {
       priority: 4000,
       rule: [
         { reg: '^#*(NCM|ncm)(运行)?状态$', fnc: 'status' },
-        { reg: '^#*(NCM|ncm)(运行)?时长$', fnc: 'uptime' },
         { reg: '^#*(NCM|ncm)(启动|运行)$', fnc: 'start' },
         { reg: '^#*(NCM|ncm)(重载|重启)$', fnc: 'reload' }
       ]
@@ -83,22 +82,6 @@ export class runtime extends plugin {
   async status() {
     const status = await getNcmApiServiceStatus()
     await this.reply(buildStatusMessage(status))
-    return true
-  }
-
-  async uptime() {
-    const status = await getNcmApiServiceStatus()
-    const lines = [
-      'NCMApi 运行时长',
-      '状态：' + (status.starting ? '启动中' : status.started ? '运行中' : '未运行'),
-      '运行时长：' + (status.startTime ? formatDuration(status.uptimeMs) : '未开始')
-    ]
-
-    if (status.startTime) {
-      lines.push('启动时间：' + formatTime(status.startTime))
-    }
-
-    await this.reply(lines.join('\n'))
     return true
   }
 
